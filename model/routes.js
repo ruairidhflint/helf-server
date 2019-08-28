@@ -1,9 +1,9 @@
 const express = require('express');
 const Router = express();
-const db = require('../database')
+const Helpers = require('../model/dbHelpers');
 
 Router.get('/', (req, res) => {
-    db.select().from('weight')
+    Helpers.getAllEntries()
         .then(data => {
             res.send(data)
         })
@@ -11,19 +11,15 @@ Router.get('/', (req, res) => {
 
 Router.get('/:id', (req, res) => {
     const { id } = req.params;
-    db.select()
-        .from('weight')
-        .where('id', id)
-        .then((data) => {
-            res.send(data[0])
+    Helpers.getEntryByID(id)
+        .then(data => {
+            res.send(data)
         })
 })
 
 Router.post('/', (req, res) => {
     const { date, weight, notes } = req.body;
-    db.insert({ date, weight, notes })
-        .returning('*')
-        .into('weight')
+    Helpers.postNewEntry(date, weight, notes)
         .then(data => {
             res.send(data[0])
         })
@@ -31,12 +27,9 @@ Router.post('/', (req, res) => {
 
 Router.delete('/:id', (req, res) => {
     const { id } = req.params;
-    db.select()
-        .from('weight')
-        .where('id', id)
-        .delete()
+    Helpers.deleteEntryByID(id)
         .then(() => {
-            res.send({message: `Record with ID #${id} deleted.`})
+            res.send({ message: `Record with ID #${id} deleted.` })
         })
 })
 
