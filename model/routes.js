@@ -6,7 +6,10 @@ const Middleware = require('./middleware');
 Router.get('/', (req, res) => {
     Helpers.getAllEntries()
         .then(data => {
-            res.send(data)
+            res.status(200).json(data);
+        })
+        .catch(err => {
+            res.status(500).json({err})
         })
 })
 
@@ -14,7 +17,10 @@ Router.get('/:id', Middleware.checkIDIsValid, (req, res) => {
     const { id } = req.params;
     Helpers.getEntryByID(id)
         .then(data => {
-            res.send(data)
+            res.status(200).json(data);
+        })
+        .catch(err => {
+            res.status(500).json({err})
         })
 })
 
@@ -22,7 +28,10 @@ Router.post('/', Middleware.checkEntryIsValid, (req, res) => {
     const { date, weight, notes } = req.body;
     Helpers.postNewEntry(date, weight, notes)
         .then(data => {
-            res.send(data[0])
+            res.status(201).json(data[0]);
+        })
+        .catch(err => {
+            res.status(500).json({err})
         })
 })
 
@@ -30,7 +39,10 @@ Router.delete('/:id', Middleware.checkIDIsValid, (req, res) => {
     const { id } = req.params;
     Helpers.deleteEntryByID(id)
         .then(() => {
-            res.send({ message: `Record with ID #${id} deleted.` })
+            res.status(202).json({ message: `Record with ID #${id} deleted.` });
+        })
+        .catch(err => {
+            res.status(500).json({err})
         })
 })
 
