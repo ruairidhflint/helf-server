@@ -1,11 +1,12 @@
 const express = require('express');
 const server = express();
+const routes = require('./model/routes');
 
 server.use(express.json());
 
-server.get('/', (req, res) => {
-    res.send('Hello');
-})
+server.use('/', routes);
+
+
 
 
 
