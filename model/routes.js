@@ -9,6 +9,16 @@ Router.get('/', (req, res) => {
         })
 })
 
+Router.get('/:id', (req, res) => {
+    const { id } = req.params;
+    db.select()
+        .from('weight')
+        .where('id', id)
+        .then((data) => {
+            res.send(data[0])
+        })
+})
+
 Router.post('/', (req, res) => {
     const { date, weight, notes } = req.body;
     db.insert({ date, weight, notes })
