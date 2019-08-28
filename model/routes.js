@@ -1,6 +1,7 @@
 const express = require('express');
 const Router = express();
 const Helpers = require('../model/dbHelpers');
+const Middleware = require('./middleware');
 
 Router.get('/', (req, res) => {
     Helpers.getAllEntries()
@@ -9,7 +10,7 @@ Router.get('/', (req, res) => {
         })
 })
 
-Router.get('/:id', (req, res) => {
+Router.get('/:id', Middleware.checkIDIsValid, (req, res) => {
     const { id } = req.params;
     Helpers.getEntryByID(id)
         .then(data => {
@@ -17,7 +18,7 @@ Router.get('/:id', (req, res) => {
         })
 })
 
-Router.post('/', (req, res) => {
+Router.post('/', Middleware.checkEntryIsValid, (req, res) => {
     const { date, weight, notes } = req.body;
     Helpers.postNewEntry(date, weight, notes)
         .then(data => {
@@ -25,7 +26,7 @@ Router.post('/', (req, res) => {
         })
 })
 
-Router.delete('/:id', (req, res) => {
+Router.delete('/:id', Middleware.checkIDIsValid, (req, res) => {
     const { id } = req.params;
     Helpers.deleteEntryByID(id)
         .then(() => {
